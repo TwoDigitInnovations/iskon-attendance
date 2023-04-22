@@ -74,8 +74,8 @@ module.exports = {
     const payload = req.body;
     const at = await Attendance.find({
       user_id: payload.user_id,
-      attendance_date: payload.date
-    });
+      attendance_date: payload.date,
+    }).populate("devotee_id");
     return response.ok(res, at);
   },
 };
