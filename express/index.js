@@ -1,9 +1,9 @@
-const app = require('express')();
+const app = require("express")();
 require("dotenv").config();
-const passport = require('passport');
-const bodyParser = require('body-parser');
-const noc = require('no-console');
-const cors = require('cors');
+const passport = require("passport");
+const bodyParser = require("body-parser");
+const noc = require("no-console");
+const cors = require("cors");
 
 // Bootstrap schemas, models
 require("./bootstrap");
@@ -15,11 +15,10 @@ app.use(passport.initialize());
 app.use(cors());
 
 //Database connection
-require('./db');
+require("./db");
 //Passport configuration
-require('./passport')(passport);
+require("./passport")(passport);
 //Routes configuration
 require("./../src/routes")(app);
-
 
 module.exports = app;

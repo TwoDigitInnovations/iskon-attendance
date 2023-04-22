@@ -74,6 +74,7 @@ module.exports = {
     const payload = req.body;
     const at = await Attendance.find({
       user_id: payload.user_id,
+      attendance_date: payload.date
     });
     return response.ok(res, at);
   },
