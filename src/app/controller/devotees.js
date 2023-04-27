@@ -117,9 +117,10 @@ module.exports = {
       devotees.map((i) => {
         obj.push({
           devotee: i,
-          attendance: attendance.find(
-            (f) => f?.devotee_id.toString() === i?._id.toString()
-          )?.attendance_date,
+          attendance:
+            attendance.find(
+              (f) => f?.devotee_id.toString() === i?._id.toString()
+            )?.attendance_date || "",
         });
       });
       return response.ok(res, obj);
