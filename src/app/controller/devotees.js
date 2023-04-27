@@ -118,9 +118,9 @@ module.exports = {
         obj.push({
           devotee: i,
           attendance:
-            attendance.find(
+            attendance.filter(
               (f) => f?.devotee_id.toString() === i?._id.toString()
-            )?.attendance_date || "",
+            ) || [],
         });
       });
       return response.ok(res, obj);
