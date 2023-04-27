@@ -19,5 +19,7 @@ router.post("/updateProfile", user.updateProfile);
 router.post("/get-devotees", devotees.getDevotees);
 router.post("/save-attendance", devotees.saveAttendance);
 router.post("/get-attendance", devotees.getAttendance);
+router.post("/get-Allattendance", devotees.getAllAttendance);
+router.post("/get-bydate", devotees.formatedAttendance);
 
 module.exports = router;

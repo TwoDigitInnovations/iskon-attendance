@@ -8,7 +8,7 @@ const attendanceSchema = new mongoose.Schema(
       ref: "Devotees",
     },
     attendance_date: {
-      type: String,
+      type: Date,
     },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,

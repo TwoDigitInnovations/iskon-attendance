@@ -72,10 +72,59 @@ module.exports = {
 
   getAttendance: async (req, res) => {
     const payload = req.body;
+    let startDate = new Date(
+      new Date(payload?.date).setDate(new Date(payload?.date).getDate() - 1)
+    );
+    let endDate = new Date(
+      new Date(payload?.date).setDate(new Date(payload?.date).getDate() + 1)
+    );
+    console.log(startDate);
+    console.log(endDate);
+    console.log(payload);
     const at = await Attendance.find({
       user_id: payload.user_id,
-      attendance_date: payload.date,
+      attendance_date: {
+        $gte: new Date(startDate).getTime(),
+        $lt: new Date(endDate).getTime(),
+      },
     }).populate("devotee_id");
     return response.ok(res, at);
+  },
+
+  getAllAttendance: async (req, res) => {
+    const payload = req.body;
+    console.log(payload);
+    const at = await Attendance.find({
+      user_id: payload.user_id,
+    });
+    return response.ok(res, at);
+  },
+
+  formatedAttendance: async (req, res) => {
+    try {
+      let cond = {
+        user_id: req.body.user_id,
+        attendance_date: {
+          $gte: new Date(req.body.startDate).getTime(),
+          $lt: new Date(req.body.endDate).getTime(),
+        },
+      };
+
+      const attendance = await Attendance.find(cond);
+      let devotees = await Devotees.find({ user_id: req.body.user_id });
+
+      let obj = [];
+      devotees.map((i) => {
+        obj.push({
+          devotee: i,
+          attendance: attendance.find(
+            (f) => f?.devotee_id.toString() === i?._id.toString()
+          )?.attendance_date,
+        });
+      });
+      return response.ok(res, obj);
+    } catch (error) {
+      return response.error(res, error);
+    }
   },
 };
