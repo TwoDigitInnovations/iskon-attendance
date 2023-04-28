@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Devotees = mongoose.model("Devotees");
 const Attendance = mongoose.model("Attendance");
 const response = require("./../responses");
+const moment = require("moment");
 
 module.exports = {
   saveAttendance: async (req, res) => {
@@ -78,9 +79,6 @@ module.exports = {
     let endDate = new Date(
       new Date(payload?.date).setDate(new Date(payload?.date).getDate() + 1)
     );
-    console.log(startDate);
-    console.log(endDate);
-    console.log(payload);
     const at = await Attendance.find({
       user_id: payload.user_id,
       attendance_date: {
@@ -109,18 +107,19 @@ module.exports = {
           $lt: new Date(req.body.endDate).getTime(),
         },
       };
-
       const attendance = await Attendance.find(cond);
       let devotees = await Devotees.find({ user_id: req.body.user_id });
-
       let obj = [];
       devotees.map((i) => {
+        let attt = [];
+        attendance.map((ele) => {
+          if (ele?.devotee_id.toString() === i?._id.toString()) {
+            attt.push(moment(ele?.attendance_date).format("D"));
+          }
+        });
         obj.push({
           devotee: i,
-          attendance:
-            attendance.filter(
-              (f) => f?.devotee_id.toString() === i?._id.toString()
-            ) || [],
+          attendance: attt,
         });
       });
       return response.ok(res, obj);

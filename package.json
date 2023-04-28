@@ -3,7 +3,6 @@
   "version": "1.0.2",
   "description": "starting from scratch",
   "main": "server.js",
-
   "scripts": {
     "start": "node server.js",
     "start:dev": "nodemon server.js",
@@ -21,6 +20,7 @@
     "dotenv": "^10.0.0",
     "express": "4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.4",
     "mongoose": "5.12.13",
     "multer": "^1.4.4",
     "multer-s3": "^3.0.1",
