@@ -74,7 +74,7 @@ module.exports = {
   getAttendance: async (req, res) => {
     const payload = req.body;
     let startDate = new Date(
-      new Date(payload?.date).setDate(new Date(payload?.date).getDate() - 1)
+      new Date(payload?.date).setDate(new Date(payload?.date).getDate())
     );
     let endDate = new Date(
       new Date(payload?.date).setDate(new Date(payload?.date).getDate() + 1)
@@ -100,11 +100,17 @@ module.exports = {
 
   formatedAttendance: async (req, res) => {
     try {
+      const payload = req.body;
+      let endDate = new Date(
+        new Date(payload?.endDate).setDate(
+          new Date(payload?.endDate).getDate() + 1
+        )
+      );
       let cond = {
         user_id: req.body.user_id,
         attendance_date: {
-          $gte: new Date(req.body.startDate).getTime(),
-          $lt: new Date(req.body.endDate).getTime(),
+          $gte: new Date(payload?.startDate).getTime(),
+          $lt: new Date(endDate).getTime(),
         },
       };
       const attendance = await Attendance.find(cond);
@@ -122,7 +128,7 @@ module.exports = {
           attendance: attt,
         });
       });
-      return response.ok(res, obj);
+      return response.ok(res, { obj, attendance });
     } catch (error) {
       return response.error(res, error);
     }
