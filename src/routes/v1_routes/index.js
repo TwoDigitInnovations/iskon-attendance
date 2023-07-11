@@ -17,6 +17,7 @@ router.post("/updateProfile", user.updateProfile);
 
 //devotees
 router.post("/get-devotees", devotees.getDevotees);
+router.post("/delete-devotees", devotees.deleteDevotees);
 router.post("/save-attendance", devotees.saveAttendance);
 router.post("/get-attendance", devotees.getAttendance);
 router.post("/get-Allattendance", devotees.getAllAttendance);

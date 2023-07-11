@@ -76,6 +76,15 @@ module.exports = {
     }
   },
 
+  deleteDevotees: async (req, res) => {
+    try {
+      await Devotees.findByIdAndDelete(req.body.id);
+      return response.ok(res, { message: "Deleted successfully" });
+    } catch (err) {
+      return response.error(res, error);
+    }
+  },
+
   saveAttendance: async (req, res) => {
     try {
       const payload = req.body;
