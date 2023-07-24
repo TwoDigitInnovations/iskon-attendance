@@ -6,9 +6,10 @@ const moment = require("moment");
 
 module.exports = {
   saveAttendance: async (req, res) => {
+    console.log(req.body);
     try {
       const payload = req.body;
-      let user;
+      let user = [];
       let updatedUser = {};
 
       let devotee = [];
@@ -16,19 +17,22 @@ module.exports = {
         name: payload.name,
         phone: payload.phone,
       }).lean();
-      devotee = await Attendance.find({
-        devotee_id: user[0]._id,
-        attendance_date: payload.date,
-      }).lean();
-
-      if (devotee.length > 0) {
-        return response.error(res, {
-          name: "Error",
-          message: "Attendace Already Saved",
-          stack: "",
-        });
+      console.log("user ========>", user);
+      if (user.length > 0) {
+        devotee = await Attendance.find({
+          devotee_id: user[0]._id,
+          attendance_date: payload.date,
+        }).lean();
+        console.log("===========>", devotee);
+        if (devotee) {
+          return response.error(res, {
+            name: "Error",
+            message: "Attendace Already Saved",
+            stack: "",
+          });
+        }
       }
-      console.log(user);
+
       let userDetail = {
         phone: payload.phone,
         name: payload.name,
@@ -37,14 +41,14 @@ module.exports = {
         marital_status: payload.marital_status,
         user_id: payload.user_id,
       };
-      if (user.length) {
+      if (user?.length > 0) {
         let attendance = new Attendance({
           devotee_id: user[0]._id,
           user_id: payload.user_id,
           attendance_date: payload.date,
         });
         const at = await attendance.save();
-        const dev = await Devotees.findByIdAndUpdate(user[0]._id, userDetail, {
+        const dev = await Devotees.findByIdAndUpdate(user._id, userDetail, {
           new: true,
           upsert: true,
         });
@@ -71,8 +75,8 @@ module.exports = {
           return response.created(res, updatedUser);
         }
       }
-    } catch (error) {
-      return { message: "err" };
+    } catch (err) {
+      return response.error(res, err);
     }
   },
 
@@ -81,7 +85,7 @@ module.exports = {
       await Devotees.findByIdAndDelete(req.body.id);
       return response.ok(res, { message: "Deleted successfully" });
     } catch (err) {
-      return response.error(res, error);
+      return response.error(res, err);
     }
   },
 
